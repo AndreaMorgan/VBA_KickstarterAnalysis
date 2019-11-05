@@ -1,0 +1,180 @@
+Option Explicit
+
+
+Sub StockSummation()
+    
+    'Declaring variables for "Easy"
+    
+    Dim ticker As String
+    Dim Volume As Double
+    Dim LastRow As Long
+    Dim LastCol As Long
+    Dim i As Long
+    Dim writeToRow As Long
+   
+    
+    'Declaring variables for "Moderate"
+    
+    Dim OpenValue As Double
+    Dim CloseValue As Double
+    Dim YearChange As Double
+    Dim PercentChange As Double
+    Dim lastRowChange As Long
+    
+    
+    'Declaring Variables for "Hard"
+    Dim greatest As Double
+    Dim least As Double
+    Dim greatestVol As Double
+    Dim greatestTick As String
+    Dim leastTick As String
+    Dim greatVolTick As String
+    
+    'Declaring Variables for "Challenge"
+    Dim Sheet As Worksheet
+    
+    
+        'Code for calculating unique ticker, yearly change, percent change, total volume
+    
+
+        For Each Sheet In Sheets
+        
+        'Assigning values to variables
+        ticker = Range("A2").Value
+        Volume = Range("G2").Value
+        writeToRow = 2
+        OpenValue = Range("C2").Value
+        LastRow = ActiveSheet.Cells(ActiveSheet.Rows.Count, "A").End(xlUp).Row
+        
+            For i = 3 To LastRow + 1
+            
+                If Sheet.Cells(i, 1).Value = ticker Then
+            
+                    Volume = Volume + Sheet.Cells(i, 7).Value                'Adds next volume to the total for ticker
+                
+                Else
+                
+                    CloseValue = Sheet.Cells(i - 1, 6).Value                    'Sets the value of CloseValue to the last close value of the previous ticker
+                    
+                    YearChange = CloseValue - OpenValue
+                    
+                        If OpenValue <> 0 Then
+                        
+                            PercentChange = (YearChange / OpenValue)
+                        
+                        Else
+                            PercentChange = (YearChange / 100)
+                            
+                        End If
+                    
+                    Sheet.Cells(writeToRow, 9).Value = ticker                     'Records ticker, YearChange, PercentChange and total volume in I
+                    Sheet.Cells(writeToRow, 10).Value = YearChange
+                    Sheet.Cells(writeToRow, 11).Value = PercentChange
+                    Sheet.Cells(writeToRow, 12).Value = Volume
+                    
+                    ticker = Sheet.Cells(i, 1).Value                                      'Resets ticker to the next unique value with volume and OpenValue to match,_
+                    Volume = Sheet.Cells(i, 7).Value                                    'and sets writetorow to next empty cell
+                    OpenValue = Sheet.Cells(i, 3).Value
+                    writeToRow = writeToRow + 1
+                
+                End If
+            
+            Next i
+        
+        
+        
+    'Code for formatting interior colors for positive/negative changes for yearly change
+    
+        lastRowChange = ActiveSheet.Cells(ActiveSheet.Rows.Count, "I").End(xlUp).Row
+    
+            
+            For i = 2 To lastRowChange
+        
+                If Sheet.Cells(i, 10).Value > 0 Then
+            
+                    Sheet.Cells(i, 10).Interior.ColorIndex = 4
+            
+                Else
+            
+                    Sheet.Cells(i, 10).Interior.ColorIndex = 3
+                
+                End If
+        
+            Next i
+            
+        
+    
+    'Code for calculating max/min percent change w/ticker, max total volume w/ ticker
+    
+        lastRowChange = ActiveSheet.Cells(ActiveSheet.Rows.Count, "I").End(xlUp).Row
+    
+            greatest = 0
+            greatestVol = 0
+    
+                For i = 2 To lastRowChange
+        
+                    If Sheet.Cells(i, 11).Value >= greatest Then
+                
+                        greatest = Sheet.Cells(i, 11).Value
+                        greatestTick = Sheet.Cells(i, 9).Value
+                
+                    End If
+            
+                    If Sheet.Cells(i, 12).Value >= greatestVol Then
+                
+                        greatestVol = Sheet.Cells(i, 12).Value
+                        greatVolTick = Sheet.Cells(i, 9).Value
+    
+                    End If
+              
+                Next i
+        
+            Sheet.Cells(2, 16).Value = greatest
+            Sheet.Cells(2, 15).Value = greatestTick
+            Sheet.Cells(4, 16).Value = greatestVol
+            Sheet.Cells(4, 15).Value = greatVolTick
+            
+            least = greatest
+    
+                For i = 2 To lastRowChange
+            
+                    If Sheet.Cells(i, 11).Value <= least Then
+                    
+                        least = Sheet.Cells(i, 11).Value
+                        leastTick = Sheet.Cells(i, 9).Value
+        
+                    End If
+                  
+                Next i
+    
+             Sheet.Cells(3, 16).Value = least
+             Sheet.Cells(3, 15).Value = leastTick
+             
+        
+        
+        'This code formats cells for the new values entered
+            
+            Sheet.Range("I1").Value = "Ticker"
+            Sheet.Range("J1").Value = "Yearly Change"
+            Sheet.Range("K1").Value = "Percent Change"
+            Sheet.Range("L1").Value = "Total Stock Volume"
+            Sheet.Range("N2").Value = "Greatest % Increase"
+            Sheet.Range("N3").Value = "Greatest % Decrease"
+            Sheet.Range("N4").Value = "Greatest Total Volume"
+            Sheet.Range("O1").Value = "Ticker"
+            Sheet.Range("P1").Value = "Value"
+            
+        
+            Sheet.Columns("K:K").Style = "Percent"
+            Sheet.Columns("K:K").NumberFormat = "0.00%"
+            Sheet.Range("P2", "P3").Style = "Percent"
+            Sheet.Range("P2", "P3").NumberFormat = "0.00%"
+        
+            Sheet.Columns.AutoFit
+            
+        Next Sheet
+        
+       
+            
+End Sub
+
