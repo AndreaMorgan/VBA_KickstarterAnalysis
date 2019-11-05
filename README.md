@@ -1,4 +1,5 @@
 # VBA_KickstarterAnalysis
+This project uses VBA scripting to loop through multiple sheets in Excel, summarize millions of rows of data, and select values based on specified conditions.
 
 ## Objectives
 This project shows the following skills:<br><br>
