@@ -15,4 +15,4 @@ This project shows the following skills:<br><br>
 2. Open the VBA script in the Excel document.
 3. Run the script
 
-Note:  The script takes a few seconds to run completely.  Edit
+Note:  The script takes a few seconds to run completely.
