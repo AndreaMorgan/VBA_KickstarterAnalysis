@@ -2,7 +2,7 @@
 
 ## Objectives
 This project shows the following skills:<br><br>
-Understand the fundamental building blocks of all programming languages: variables, arrays, conditionals, loops, and functions.
+* Use variables, arrays, conditionals, loops, and functions.
 Create simple VBA macros to trigger pop ups and change cell values.
 Gain practice in writing VBA subroutines that utilize variables and conditionals.
 Begin to develop essential coding skills of syntax recollection, pattern recognition, problem decomposition, and debugging.
